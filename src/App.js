@@ -1,6 +1,6 @@
 import './App.css';
 import axios from 'axios';
-import useSWR, { useSWRConfig } from "swr";
+import useSWR from "swr";
 
 const fetcher = url => axios.get(url).then(res => res.data)
 
