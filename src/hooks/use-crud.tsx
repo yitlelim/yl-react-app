@@ -20,7 +20,7 @@ export function useCrud(url: string, key: any, fetchOptions?: any) {
         method: 'POST',
         payload,
       })
-      console.log("Create console");
+      // console.log("Create console");
       const result = response
       if (data && mutate) {
         let newData = data.payload
