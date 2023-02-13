@@ -9,7 +9,7 @@ function App() {
   const { create } = useCrud(url, url);
   const { fetching } = useCrud(url);
 
-  //GET and display
+  //GET to display
   var listOfData = [];
   if(fetching && fetching.data) {
     var actualData = fetching.data.payload || {};
