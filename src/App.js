@@ -1,24 +1,48 @@
 // import './App.css';
 // import axios from 'axios';
-// import useSWR, { mutate } from "swr";
+import useSWR, { mutate } from "swr";
 // import { Button } from 'react-bootstrap';
-import React, {useState, useCallback } from 'react';
-import useSWR from 'swr';
+import React, { useState } from 'react';
+import { useCrud } from './hooks/use-crud.tsx';
 
 const url = 'http://localhost:3000/data'; //to start mock API server 'json-server --watch db.json'
 
 function App() {
   const [formData, setFormData] = useState({ name: '', age: '' });
+  const { create } = useCrud(url, url);
+  const { fetching } = useCrud(url);
+  // console.log(fetch)
+
+  let listOfData = [];
+  if(fetching && fetching.data) {
+    let actualData = fetching.data.payload || {};
+    for (const key in actualData) {
+      if (actualData.hasOwnProperty(key)) {
+        listOfData.push(key + ': ' + actualData[key].name);
+      }
+    }
+  }
+
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
+  //   console.log(`Going through POST ${JSON.stringify(formData)}`)
+
+  //   const body = JSON.stringify(formData);
+  //   const headers = { 'Content-Type': 'application/json'};
+  //   const response = await fetch(url, { method: 'POST', body, headers });
+  //   mutate(await response.json(), false);
+  // };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // console.log(`Going through POST ${JSON.stringify(formData)}`)
-
-    const body = JSON.stringify(formData);
-    const headers = { 'Content-Type': 'application/json'};
-    const response = await fetch(url, { method: 'POST', body, headers });
-    mutate(await response.json(), false);
-  };
+    console.log("Submit 1 console");
+    // console.log(formData);
+    const response = await create(formData, true);
+    // setTimeout(() => {
+    //   console.log("Submit 2 console");
+    //   // console.log(response);
+    // }, 10);
+  }
   
   const handleChange = (event) => {
     setFormData({
@@ -44,6 +68,8 @@ function App() {
       </label>
       <br />
       <button type="submit">Submit</button>
+      <br />
+      {listOfData}
     </form>
   )
 }
