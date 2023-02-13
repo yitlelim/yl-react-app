@@ -6,15 +6,14 @@ import useSWR from 'swr';
 
 export const useForm = (url) => {
     const [formData, setFormData] = useState({});
+    const { data, mutate } = useSWR(url, request);
+
     const handleSubmit = useCallback(async (event) => {
         event.preventDefault();
-        // console.log(`Going through POST ${JSON.stringify(formData)}`)
-
         const body = JSON.stringify(formData);
         const headers = { 'Content-Type': 'application/json'};
-        const response = await fetch(url, { method: 'POST', body, headers });
-        mutate(await response.json(), false)
-    }, [formData, url, mutate]);
+        mutate(await fetch(url, { method: 'POST', body, headers }).then(res => res.json()), false)
+  }, [formData, url, mutate]);
 
     const handleChange = useCallback((event) => {
         setFormData({
@@ -23,9 +22,7 @@ export const useForm = (url) => {
         });
     }, [formData, setFormData]);
 
-    const { data, mutate } = useSWR(url, () =>
-        fetch(url).then((res) => res.json())
-    );
+    
 
     return { data, formData, handleChange, handleSubmit };
 };
